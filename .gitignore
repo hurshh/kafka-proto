@@ -1,0 +1,36 @@
+# Gradle
+.gradle/
+build/
+*.gradle
+!build.gradle
+!settings.gradle
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+
+# Data directories
+data/
+storage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Compiled
+*.class
+*.jar
+*.war
+*.ear
+
+# Test
+test-results/
+
