@@ -21,8 +21,16 @@ import java.util.Properties;
  */
 public class FeatureDemo {
     public static void main(String[] args) throws Exception {
+        // Initialize logging configuration
+        LoggingConfig.initialize();
+        
         System.out.println("==========================================");
         System.out.println("Kafka-like Distributed System - Feature Demo");
+        System.out.println("==========================================");
+        System.out.println("Log files will be written to: logs/");
+        System.out.println("  - demo-node-{id}.log (for Raft nodes)");
+        System.out.println("  - demo-broker-{id}.log (for brokers)");
+        System.out.println("  - demo-controller.log (for controller)");
         System.out.println("==========================================\n");
         
         // Run demonstrations
@@ -32,6 +40,7 @@ public class FeatureDemo {
         
         System.out.println("\n==========================================");
         System.out.println("All demonstrations completed!");
+        System.out.println("Check logs/ directory for detailed logs from each node");
         System.out.println("==========================================");
     }
     
@@ -47,6 +56,9 @@ public class FeatureDemo {
         
         System.out.println("Creating 3 Raft nodes for cluster...");
         for (int nodeId : nodeIds) {
+            // Configure logging for this node
+            LoggingConfig.configureNodeLogging(nodeId);
+            
             RaftNode node = new RaftNode(
                 nodeId,
                 nodeIds,
@@ -55,6 +67,7 @@ public class FeatureDemo {
             );
             nodes.add(node);
             System.out.println("  - Node " + nodeId + " created (initial state: FOLLOWER)");
+            System.out.println("    Log file: logs/demo-node-" + nodeId + ".log");
         }
         
         System.out.println("\nStarting all nodes...");
@@ -114,10 +127,17 @@ public class FeatureDemo {
         System.out.println("\n[2] HEARTBEAT ALGORITHM DEMONSTRATION");
         System.out.println("=======================================");
         
+        // Configure controller logging
+        LoggingConfig.configureControllerLogging();
+        
         // Create controller
         Controller controller = new Controller();
         controller.start();
         System.out.println("Controller started");
+        System.out.println("  Log file: logs/demo-controller.log");
+        
+        // Configure broker logging
+        LoggingConfig.configureBrokerLogging(1);
         
         // Create broker
         Properties props = new Properties();
@@ -130,6 +150,7 @@ public class FeatureDemo {
         // Register broker
         controller.registerBroker(1, "localhost", 9092);
         System.out.println("Broker 1 registered with controller");
+        System.out.println("  Log file: logs/demo-broker-1.log");
         
         // Create heartbeat
         BrokerHeartbeat heartbeat = new BrokerHeartbeat(broker, controller);
@@ -179,16 +200,24 @@ public class FeatureDemo {
         System.out.println("\n[3] REPLICATION DEMONSTRATION");
         System.out.println("===============================");
         
+        // Configure controller logging
+        LoggingConfig.configureControllerLogging();
+        
         // Create controller
         Controller controller = new Controller();
         controller.start();
         System.out.println("Controller started");
+        System.out.println("  Log file: logs/demo-controller.log");
         
         // Register multiple brokers
         System.out.println("\nRegistering 3 brokers for replication:");
         for (int i = 1; i <= 3; i++) {
+            // Configure logging for each broker
+            LoggingConfig.configureBrokerLogging(i);
+            
             controller.registerBroker(i, "localhost", 9092 + i);
             System.out.println("  - Broker " + i + " registered (localhost:" + (9092 + i) + ")");
+            System.out.println("    Log file: logs/demo-broker-" + i + ".log");
         }
         
         // Create topic with replication

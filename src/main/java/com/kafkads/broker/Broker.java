@@ -18,6 +18,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -46,6 +47,7 @@ public class Broker {
     
     public Broker(BrokerConfig config) {
         this.config = config;
+        MDC.put("brokerId", String.valueOf(config.getBrokerId()));
         this.messageStore = new MessageStore(config);
         this.requestHandler = new RequestHandler(this);
     }

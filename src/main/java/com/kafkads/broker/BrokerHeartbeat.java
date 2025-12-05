@@ -4,6 +4,7 @@ import com.kafkads.config.BrokerConfig;
 import com.kafkads.controller.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -27,6 +28,7 @@ public class BrokerHeartbeat {
         this.config = broker.getConfig();
         this.controller = controller;
         this.scheduler = Executors.newScheduledThreadPool(1);
+        MDC.put("brokerId", String.valueOf(config.getBrokerId()));
     }
     
     /**

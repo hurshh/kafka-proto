@@ -2,6 +2,7 @@ package com.kafkads.consensus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -39,6 +40,8 @@ public class RaftNode {
         this.leaderElection = new LeaderElection(this, electionTimeoutMs);
         this.logReplication = new LogReplication(this);
         this.heartbeatIntervalMs = heartbeatIntervalMs;
+        // Set MDC for logging
+        MDC.put("nodeId", String.valueOf(nodeId));
     }
     
     /**
@@ -46,6 +49,7 @@ public class RaftNode {
      */
     public void start() {
         if (running.compareAndSet(false, true)) {
+            MDC.put("nodeId", String.valueOf(nodeId));
             logger.info("Starting Raft node: nodeId={}", nodeId);
             
             // Start election timeout checker (check every 50ms)
@@ -68,6 +72,7 @@ public class RaftNode {
     public void stop() {
         if (running.compareAndSet(true, false)) {
             logger.info("Stopping Raft node: nodeId={}", nodeId);
+            MDC.remove("nodeId");
             scheduler.shutdown();
             try {
                 if (!scheduler.awaitTermination(5, TimeUnit.SECONDS)) {

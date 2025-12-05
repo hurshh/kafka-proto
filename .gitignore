@@ -13,9 +13,9 @@ build/
 *.swo
 *~
 
-# Logs
-logs/
-*.log
+# Logs (keep directory structure but ignore log files)
+logs/*.log
+!logs/.gitkeep
 
 # Data directories
 data/

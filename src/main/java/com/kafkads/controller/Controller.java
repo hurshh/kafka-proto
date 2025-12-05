@@ -2,6 +2,7 @@ package com.kafkads.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -21,6 +22,7 @@ public class Controller {
     
     public Controller() {
         this.metadataManager = new MetadataManager();
+        MDC.put("brokerId", "controller");
     }
     
     /**

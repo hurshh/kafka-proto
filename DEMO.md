@@ -76,6 +76,58 @@ Both methods will:
 - High water mark values
 - Replication mode explanation
 
+## Log Files
+
+Each node, broker, and the controller writes logs to **separate log files** in the `logs/` directory:
+
+### Raft Nodes (Leader Election)
+- `logs/demo-node-1.log` - All logs from Raft node 1
+- `logs/demo-node-2.log` - All logs from Raft node 2
+- `logs/demo-node-3.log` - All logs from Raft node 3
+
+### Brokers (Heartbeat & Replication)
+- `logs/demo-broker-1.log` - All logs from Broker 1
+- `logs/demo-broker-2.log` - All logs from Broker 2
+- `logs/demo-broker-3.log` - All logs from Broker 3
+
+### Controller
+- `logs/demo-controller.log` - All logs from the Controller
+
+### Watching Logs in Real-Time
+
+Open multiple terminal windows to watch different logs simultaneously:
+
+```bash
+# Terminal 1: Watch all node logs
+tail -f logs/demo-node-*.log
+
+# Terminal 2: Watch a specific node
+tail -f logs/demo-node-1.log
+
+# Terminal 3: Watch broker logs
+tail -f logs/demo-broker-*.log
+
+# Terminal 4: Watch controller
+tail -f logs/demo-controller.log
+```
+
+### Analyzing Logs After Demo
+
+```bash
+# View all logs
+cat logs/demo-node-*.log logs/demo-broker-*.log logs/demo-controller.log
+
+# Search for specific events
+grep "election" logs/demo-node-*.log
+grep "heartbeat" logs/demo-broker-*.log
+grep "replication" logs/demo-controller.log
+
+# Compare node states
+grep "State=" logs/demo-node-*.log
+```
+
+See `LOGS.md` and `README-LOGS.md` for detailed log file documentation.
+
 ## Expected Output
 
 The demo will show:
