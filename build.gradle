@@ -31,7 +31,12 @@ dependencies {
 }
 
 application {
-    mainClass = 'com.kafkads.broker.Broker'
+    mainClass = 'com.kafkads.api.RestApiServer'
+    
+    // Allow passing arguments
+    if (project.hasProperty('demo')) {
+        mainClass = 'com.kafkads.demo.FeatureDemo'
+    }
 }
 
 test {
@@ -40,5 +45,18 @@ test {
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+// Task to print classpath for scripts
+task printClasspath {
+    doLast {
+        println sourceSets.main.runtimeClasspath.asPath
+    }
+}
+
+// Task to run demo
+task runDemo(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.kafkads.demo.FeatureDemo'
 }
 
